@@ -13,22 +13,51 @@ const {seedMusician} = require("./seedData");
 
 describe('./musicians endpoint', () => {
     test(`gets the correct response`, async () => {
-        let response = await request(app).get(`/musicians`);
+        const response = await request(app).get(`/musicians`);
         expect(response.statusCode).toBe(200); // Check status code for the response
-        let musician = await Musician.findByPk(1);
-        let responseData = JSON.parse(response.text);
+        const musician = await Musician.findByPk(1);
+        const responseData = JSON.parse(response.text);
         expect(musician.dataValues.name).toEqual(responseData[0].name) // compares the data from the response to the database
     });
 });
 
-// need to write tests for Musicians Part 2
+// Test written for Express Musicians Part 2
 
-describe('./musicians/:id endpoint', () => {
+describe('./musicians/:id GET request', () => {
     test(`gets the correct response`, async () => {
-        response = await request(app).get(`/musicians/2`);
+        const response = await request(app).get(`/musicians/2`);
         expect(response.statusCode).toBe(200); // Check status code for the response
         musician = await Musician.findByPk(2);
-        responseData = JSON.parse(response.text);
+        const responseData = JSON.parse(response.text);
         expect(musician.name).toEqual(responseData.name);
+    });
+});
+
+// Test written for Express Musicians Part 3
+
+describe('./musicians POST request', () => {
+    test(`gets the correct response`, async () => {
+        const response = await request(app).post(`/musicians`);
+        expect(response.statusCode).toBe(200); // Check status code for the response
+        const responseData = response.text;
+        expect(responseData).toEqual(`New Musician created`);
+    });
+});
+
+describe('./musicians PUT request', () => {
+    test(`gets the correct response`, async () => {
+        const response = await request(app).put(`/musicians/4`);
+        expect(response.statusCode).toBe(200); // Check status code for the response
+        const responseData = response.text;
+        expect(responseData).toEqual(`Musician4 updated`);
+    });
+});
+
+describe('./musicians DELETE request', () => {
+    test(`gets the correct response`, async () => {
+        const response = await request(app).delete(`/musicians/4`);
+        expect(response.statusCode).toBe(200); // Check status code for the response
+        const responseData = response.text;
+        expect(responseData).toEqual(`Musician4 deleted`);
     });
 });

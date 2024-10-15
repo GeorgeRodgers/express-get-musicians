@@ -24,13 +24,33 @@ app.get(`/musicians`, async (req, res) => {
 app.get(`/bands`, async (req, res) => {
     const bands = await Band.findAll({});
     res.json(bands);
-})
+});
 
 // Code for Express Musicians Part 2
 
 app.get('/musicians/:id', async (req, res) => {
     const musician = await Musician.findByPk(req.params.id);
     res.json(musician);
-})
+});
+
+// Code for Express Musicians Part 3
+
+app.use(express.json());
+app.use(express.urlencoded());
+
+app.post(`/musicians`, async (req, res) => {
+        await Musician.create(req.body);
+        res.send(`New Musician created`);
+});
+
+app.put(`/musicians/:id`, async (req, res) => {
+        await Musician.update(req.body, {where: {id: req.params.id}});
+        res.send(`Musician${req.params.id} updated`);
+});
+
+app.delete(`/musicians/:id`, async (req, res) => {
+        await Musician.destroy({where: {id: req.params.id}});
+        res.send(`Musician${req.params.id} deleted`);
+});
 
 module.exports = app;
