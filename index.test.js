@@ -21,5 +21,7 @@ describe('./musicians endpoint', () => {
         const responseData = JSON.parse(response.text);
         expect(musician.dataValues.name).toEqual(responseData[0].name) // compares the data from the response to the database
     });
+
+    // need to write tests for Musicians Part 2
     
 })

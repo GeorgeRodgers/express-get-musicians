@@ -14,16 +14,23 @@ app.get(`/musicians`, async (req, res) => {
     res.json(musicians);
 })
 
-// Codde for Express Musicians Part 1 extension
+// Code for Express Musicians Part 1 extension
 
-app.get(`/musicians/1`, async (req, res) => {
-    const musician1 = await Musician.findByPk(1);
-    res.json(musician1);
-})
+// app.get(`/musicians/1`, async (req, res) => {
+//     const musician1 = await Musician.findByPk(1);
+//     res.json(musician1);
+// })  // Express Musicians Part 2 recreates this GET
 
 app.get(`/bands`, async (req, res) => {
     const bands = await Band.findAll({});
     res.json(bands);
+})
+
+// Code for Express Musicians Part 2
+
+app.get('/musicians/:id', async (req, res) => {
+    const musician = await Musician.findByPk(req.params.id);
+    res.json(musician);
 })
 
 module.exports = app;
