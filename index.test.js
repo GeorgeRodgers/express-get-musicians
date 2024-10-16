@@ -93,6 +93,6 @@ describe('./bands/:id GET request', () => {
         const responseData = JSON.parse(response.text);
         expect(responseData.name).toEqual(seedBand[1].name);
         expect(responseData.genre).toEqual(seedBand[1].genre); // compares the data from the response to the seedData
-        expect(Array.isArray(responseData.musicians)).toEqual(true);
+        expect(Array.isArray(responseData.musicians)).toEqual(true); // Checks if the musicias value is an array
     });
 });
