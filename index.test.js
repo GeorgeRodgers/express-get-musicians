@@ -1,13 +1,21 @@
 // install dependencies
 const { execSync } = require('child_process');
-execSync('npm install');
-execSync('npm run seed');
+// execSync('npm install'); // slows down test and is not required
+// execSync('npm run seed');
+execSync('node seed'); // Using this code stops the issue with permissions error
 
 const request = require("supertest")
 const { db } = require('./db/connection');
 const { Musician } = require('./models/index')
 const app = require('./src/app')
-const {seedMusician} = require("./seedData");
+const { seedMusician, seedBand } = require("./seedData");
+const { clear } = require('console');
+
+// beforeAll(async () => {
+//     await db.sync({ force: true });
+//     execSync('node seed');
+//   })
+
 
 // Test written for Express Musicians Part 1
 
@@ -15,9 +23,9 @@ describe('./musicians endpoint', () => {
     test(`gets the correct response`, async () => {
         const response = await request(app).get(`/musicians`);
         expect(response.statusCode).toBe(200); // Check status code for the response
-        const musician = await Musician.findByPk(1);
         const responseData = JSON.parse(response.text);
-        expect(musician.dataValues.name).toEqual(responseData[0].name) // compares the data from the response to the database
+        expect(responseData[0].name).toEqual(seedMusician[0].name);
+        expect(responseData[0].instrument).toEqual(seedMusician[0].instrument); // compares the data from the response to the seedData
     });
 });
 
@@ -27,9 +35,9 @@ describe('./musicians/:id GET request', () => {
     test(`gets the correct response`, async () => {
         const response = await request(app).get(`/musicians/2`);
         expect(response.statusCode).toBe(200); // Check status code for the response
-        musician = await Musician.findByPk(2);
         const responseData = JSON.parse(response.text);
-        expect(musician.name).toEqual(responseData.name);
+        expect(responseData.name).toEqual(seedMusician[1].name);
+        expect(responseData.instrument).toEqual(seedMusician[1].instrument); // compares the data from the response to the seedData
     });
 });
 
@@ -37,19 +45,22 @@ describe('./musicians/:id GET request', () => {
 
 describe('./musicians POST request', () => {
     test(`gets the correct response`, async () => {
-        const response = await request(app).post(`/musicians`);
+        const response = await request(app).post(`/musicians`).send({name: "testName", instrument: "testInstrument"});
         expect(response.statusCode).toBe(200); // Check status code for the response
-        const responseData = response.text;
-        expect(responseData).toEqual(`New Musician created`);
+        const responseData = JSON.parse(response.text);
+        expect(responseData.id).toEqual(4);
+        expect(responseData.name).toEqual("testName");
+        expect(responseData.instrument).toEqual("testInstrument");
     });
 });
 
 describe('./musicians PUT request', () => {
     test(`gets the correct response`, async () => {
-        const response = await request(app).put(`/musicians/4`);
+        const response = await request(app).put(`/musicians/4`).send({name: "updatedName", instrument: "updatedInstrument"});
         expect(response.statusCode).toBe(200); // Check status code for the response
-        const responseData = response.text;
-        expect(responseData).toEqual(`Musician4 updated`);
+        const responseData = JSON.parse(response.text);
+        expect(responseData.name).toEqual("updatedName");
+        expect(responseData.instrument).toEqual("updatedInstrument");
     });
 });
 

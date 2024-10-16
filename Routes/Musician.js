@@ -3,7 +3,7 @@ const { Musician } = require("../models/index")
 const musicianRouter = express.Router();
 
 musicianRouter.get(`/`, async (req, res) => {
-    const musicians = await Musician.findAll({});
+    const musicians = await Musician.findAll();
     res.json(musicians);
 })
 
@@ -13,13 +13,14 @@ musicianRouter.get('/:id', async (req, res) => {
 });
 
 musicianRouter.post(`/`, async (req, res) => {
-        await Musician.create(req.body);
-        res.send(`New Musician created`);
+    const newMusician = await Musician.create(req.body);
+    res.json(newMusician);
 });
 
 musicianRouter.put(`/:id`, async (req, res) => {
-        await Musician.update(req.body, {where: {id: req.params.id}});
-        res.send(`Musician${req.params.id} updated`);
+    await Musician.update(req.body, {where: {id: req.params.id}});
+    const updatedMusician = await Musician.findByPk(req.params.id);
+    res.send(updatedMusician);
 });
 
 musicianRouter.delete(`/:id`, async (req, res) => {

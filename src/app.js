@@ -3,6 +3,7 @@ const app = express();
 const { Musician, Band } = require("../models/index")
 const { db } = require("../db/connection")
 const { musicianRouter } = require(`../Routes/Musician.js`)
+const { bandRouter } = require(`../Routes/Band.js`)
 
 //TODO: Create a GET /musicians route to return all musicians 
 
@@ -20,10 +21,10 @@ const { musicianRouter } = require(`../Routes/Musician.js`)
 //     res.json(musician1);
 // })  // Express Musicians Part 2 recreates this GET
 
-app.get(`/bands`, async (req, res) => {
-    const bands = await Band.findAll({});
-    res.json(bands);
-});
+// app.get(`/bands`, async (req, res) => {  // route removed for Express Musicians Bonus
+//     const bands = await Band.findAll({});
+//     res.json(bands);
+// });
 
 // // Code for Express Musicians Part 2
 
@@ -57,7 +58,8 @@ app.get(`/bands`, async (req, res) => {
 // // Code for Express Musicians Part 4
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(`/musicians`, musicianRouter);
+app.use(`/bands`, bandRouter);
 
 module.exports = app;
