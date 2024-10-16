@@ -18,10 +18,10 @@ bandRouter.get(`/`, async (req, res) => {
 
 bandRouter.get('/:id', async (req, res) => {
     const band = await Band.findByPk(req.params.id);
-    const bandMembers = await band.getMusicians();
+    const musicians = await band.getMusicians();
     const bandWithMembers = {
         ...band.toJSON(),
-        bandMembers
+        musicians
         };
     res.json(bandWithMembers);
 });

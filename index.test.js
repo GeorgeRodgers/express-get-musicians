@@ -19,7 +19,7 @@ const { clear } = require('console');
 
 // Test written for Express Musicians Part 1
 
-describe('./musicians endpoint', () => {
+describe('./musicians GET request', () => {
     test(`gets the correct response`, async () => {
         const response = await request(app).get(`/musicians`);
         expect(response.statusCode).toBe(200); // Check status code for the response
@@ -70,5 +70,29 @@ describe('./musicians DELETE request', () => {
         expect(response.statusCode).toBe(200); // Check status code for the response
         const responseData = response.text;
         expect(responseData).toEqual(`Musician4 deleted`);
+    });
+});
+
+// Test written for Express Musicians Bonus
+
+describe('./bands GET request', () => {
+    test(`gets the correct response`, async () => {
+        const response = await request(app).get(`/bands`);
+        expect(response.statusCode).toBe(200); // Check status code for the response
+        const responseData = JSON.parse(response.text);
+        expect(responseData[0].name).toEqual(seedBand[0].name);
+        expect(responseData[0].genre).toEqual(seedBand[0].genre); // compares the data from the response to the seedData
+        expect(Array.isArray(responseData[0].musicians)).toEqual(true);
+    });
+});
+
+describe('./bands/:id GET request', () => {
+    test(`gets the correct response`, async () => {
+        const response = await request(app).get(`/bands/2`);
+        expect(response.statusCode).toBe(200); // Check status code for the response
+        const responseData = JSON.parse(response.text);
+        expect(responseData.name).toEqual(seedBand[1].name);
+        expect(responseData.genre).toEqual(seedBand[1].genre); // compares the data from the response to the seedData
+        expect(Array.isArray(responseData.musicians)).toEqual(true);
     });
 });
