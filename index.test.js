@@ -6,7 +6,7 @@ execSync('npm run seed');
 const request = require("supertest")
 const { db } = require('./db/connection');
 const { Musician } = require('./models/index')
-const app = require('./src/app');
+const app = require('./src/app')
 const {seedMusician} = require("./seedData");
 
 // Test written for Express Musicians Part 1
