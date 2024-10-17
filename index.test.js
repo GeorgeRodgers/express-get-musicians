@@ -52,14 +52,32 @@ describe('./musicians POST request', () => {
         expect(responseData.name).toEqual("testName");
         expect(responseData.instrument).toEqual("testInstrument");
     });
-    test(`gets the correct error response`, async () => {
+    // Test written for Express Musicians Part 5
+    test(`gets the correct error response if values for "name" and "instrument" not given`, async () => {
         const errorResponse = await request(app).post(`/musicians`).send({"name": "", "instrument": ""});
+        expect(errorResponse.statusCode).toBe(200);
+        const errorResponseData = JSON.parse(errorResponse.text);
+        expect(errorResponseData.error.length).toBe(4);
+        expect(errorResponseData.error[0].path).toBe("name");
+        expect(errorResponseData.error[1].path).toBe("instrument");
+    });
+    // Tests written for Extenstion Problems
+    test(`gets the correct error response if values for "name" and "instrument" are too short`, async () => {
+        const errorResponse = await request(app).post(`/musicians`).send({"name": "1", "instrument": "1"});
         expect(errorResponse.statusCode).toBe(200);
         const errorResponseData = JSON.parse(errorResponse.text);
         expect(errorResponseData.error.length).toBe(2);
         expect(errorResponseData.error[0].path).toBe("name");
         expect(errorResponseData.error[1].path).toBe("instrument");
-});
+    });
+    test(`gets the correct error response if values for "name" and "instrument" are too long`, async () => {
+        const errorResponse = await request(app).post(`/musicians`).send({"name": "000000000000000000000", "instrument": "000000000000000000000"});
+        expect(errorResponse.statusCode).toBe(200);
+        const errorResponseData = JSON.parse(errorResponse.text);
+        expect(errorResponseData.error.length).toBe(2);
+        expect(errorResponseData.error[0].path).toBe("name");
+        expect(errorResponseData.error[1].path).toBe("instrument");
+    });
 });
 
 describe('./musicians PUT request', () => {
@@ -69,6 +87,23 @@ describe('./musicians PUT request', () => {
         const responseData = JSON.parse(response.text);
         expect(responseData.name).toEqual("updatedName");
         expect(responseData.instrument).toEqual("updatedInstrument");
+    });
+    // Tests written for Extenstion Problems
+    test(`gets the correct error response if values for "name" and "instrument" are too short`, async () => {
+        const errorResponse = await request(app).put(`/musicians/1`).send({"name": "1", "instrument": "1"});
+        expect(errorResponse.statusCode).toBe(200);
+        const errorResponseData = JSON.parse(errorResponse.text);
+        expect(errorResponseData.error.length).toBe(2);
+        expect(errorResponseData.error[0].path).toBe("name");
+        expect(errorResponseData.error[1].path).toBe("instrument");
+    });
+    test(`gets the correct error response if values for "name" and "instrument" are too long`, async () => {
+        const errorResponse = await request(app).put(`/musicians/1`).send({"name": "000000000000000000000", "instrument": "000000000000000000000"});
+        expect(errorResponse.statusCode).toBe(200);
+        const errorResponseData = JSON.parse(errorResponse.text);
+        expect(errorResponseData.error.length).toBe(2);
+        expect(errorResponseData.error[0].path).toBe("name");
+        expect(errorResponseData.error[1].path).toBe("instrument");
     });
 });
 
