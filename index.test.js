@@ -52,6 +52,14 @@ describe('./musicians POST request', () => {
         expect(responseData.name).toEqual("testName");
         expect(responseData.instrument).toEqual("testInstrument");
     });
+    test(`gets the correct error response`, async () => {
+        const errorResponse = await request(app).post(`/musicians`).send({"name": "", "instrument": ""});
+        expect(errorResponse.statusCode).toBe(200);
+        const errorResponseData = JSON.parse(errorResponse.text);
+        expect(errorResponseData.error.length).toBe(2);
+        expect(errorResponseData.error[0].path).toBe("name");
+        expect(errorResponseData.error[1].path).toBe("instrument");
+});
 });
 
 describe('./musicians PUT request', () => {
